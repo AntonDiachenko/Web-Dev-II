@@ -8,6 +8,8 @@ function App() {
   const [review, setReview] = useState("");
   const [movieReviewList, setMovieList] = useState([]);
 
+  const [newReview, setNewReview] = useState("");
+
   useEffect(() => {
     Axios.get("http://localhost:3001/api/get").then((response)=> {
       setMovieList(response.data);
@@ -33,7 +35,13 @@ function App() {
     };
 
 
-
+    const updateReview = (movie) => {
+      Axios.put("http://localhost:3001/api/update", {
+        movieName: movie,
+        movieReview: newReview,
+      });
+      setNewReview("");
+    };
   
 
 
@@ -58,8 +66,10 @@ function App() {
             <h1>{val.movieName}</h1>
             <p>{val.movieReview}</p>
             <button onClick={() => {deleteReview(val.movieName)}}>Delete</button>
-            <input id="updateInput" type="text" />
-            <button>Update</button>
+            <input type="text" id="updateInput" onChange={(e)=>{
+              setNewReview(e.target.value)
+            }} />
+            <button onClick={()=> {updateReview(val.movieName)}}>Update</button>
           </div>
           );
         })}
